@@ -1,0 +1,171 @@
+{
+  "note": "Example resource registry. Do not put real keys here. Use env vars or /tmp/ai_earth_keys.env.",
+  "resources": [
+    {
+      "id": "openrouter",
+      "provider": "openrouter",
+      "roles": ["generator", "verifier"],
+      "auth_env": "OPENROUTER_KEYS",
+      "base_url": "https://openrouter.ai/api/v1",
+      "api_style": "openai-compatible",
+      "models": [
+        "meta-llama/llama-3.1-8b-instruct",
+        "meta-llama/llama-3.3-70b-instruct",
+        "mistralai/mistral-small-24b-instruct-2501",
+        "qwen/qwen-2.5-7b-instruct"
+      ],
+      "capabilities": {
+        "chat": true,
+        "structured_outputs": "model-dependent",
+        "logprobs": "model-dependent",
+        "tools": "model-dependent",
+        "reasoning": "model-dependent",
+        "provider_quantization_filter": true
+      },
+      "scientific_controls": {
+        "pin_provider": "recommended",
+        "pin_quantization": "critical_if_available",
+        "record_tokens": true,
+        "record_latency": true,
+        "allow_fallback_in_confirmatory": false
+      },
+      "best_use": ["model_sweep", "quantization_study", "cross_family_verifier"],
+      "risks": ["provider_routing", "quantization_drift", "account_key_heterogeneity"]
+    },
+    {
+      "id": "gemini_ai_studio",
+      "provider": "google_ai_studio",
+      "roles": ["generator", "verifier", "long_context"],
+      "auth_env": "GEMINI_API_KEYS",
+      "api_style": "gemini",
+      "models": ["gemini-2.5-flash", "gemini-2.5-pro"],
+      "capabilities": {
+        "chat": true,
+        "long_context": true,
+        "structured_outputs": true,
+        "context_caching": true
+      },
+      "scientific_controls": {
+        "record_model_version": true,
+        "restrict_key_to_generative_language_api": true,
+        "allow_fallback_in_confirmatory": false
+      },
+      "best_use": ["cross_family_verifier", "long_context_stress", "structured_output"],
+      "risks": ["key_type_confusion", "quota_variability", "model_version_drift"]
+    },
+    {
+      "id": "nvidia_nim",
+      "provider": "nvidia_nim",
+      "roles": ["generator", "verifier", "throughput"],
+      "auth_env": "NVIDIA_API_KEY",
+      "base_url": "https://integrate.api.nvidia.com/v1",
+      "api_style": "openai-compatible",
+      "models": ["openai/gpt-oss-120b", "deepseek-ai/deepseek-v3.2", "moonshotai/kimi-k2.5"],
+      "capabilities": {
+        "chat": true,
+        "high_throughput": true
+      },
+      "scientific_controls": {
+        "record_exact_model_id": true,
+        "record_latency": true,
+        "allow_fallback_in_confirmatory": false
+      },
+      "best_use": ["large_k_sampling", "throughput_benchmark", "cross_family_model"],
+      "risks": ["credit_limits", "catalog_drift"]
+    },
+    {
+      "id": "mistral_studio",
+      "provider": "mistral",
+      "roles": ["generator", "verifier"],
+      "auth_env": "MISTRAL_API_KEY",
+      "api_style": "mistral",
+      "models": ["mistral-large-latest", "mistral-small-latest", "magistral-medium-latest", "codestral-latest"],
+      "capabilities": {
+        "chat": true,
+        "structured_outputs": true,
+        "reasoning_models": true,
+        "code": true
+      },
+      "scientific_controls": {
+        "record_model_version": true,
+        "allow_fallback_in_confirmatory": false
+      },
+      "best_use": ["cross_family_verifier", "structured_json", "code_tasks"],
+      "risks": ["model_alias_drift", "pricing_variability"]
+    },
+    {
+      "id": "siliconflow",
+      "provider": "siliconflow",
+      "roles": ["generator", "verifier"],
+      "auth_env": "SILICONFLOW_API_KEY",
+      "api_style": "unknown_or_openai_compatible",
+      "models": ["qwen", "deepseek", "other_open_models"],
+      "capabilities": {
+        "chat": "needs_smoke_test",
+        "structured_outputs": "unknown"
+      },
+      "scientific_controls": {
+        "requires_discovery_before_confirmatory": true
+      },
+      "best_use": ["qwen_family_control", "deepseek_family_control"],
+      "risks": ["endpoint_unknown", "pricing_unknown", "usage_metadata_unknown"]
+    },
+    {
+      "id": "serper",
+      "provider": "serper",
+      "roles": ["search", "discovery"],
+      "auth_env": "SERPER_API_KEY",
+      "api_style": "search_api",
+      "capabilities": {
+        "web_search": true,
+        "news_search": true
+      },
+      "best_use": ["online_round_discovery", "source_candidate_generation"],
+      "risks": ["snippets_not_evidence", "search_bias"]
+    },
+    {
+      "id": "firecrawl",
+      "provider": "firecrawl",
+      "roles": ["scrape", "crawl", "extract"],
+      "auth_env": "FIRECRAWL_API_KEY",
+      "api_style": "firecrawl",
+      "capabilities": {
+        "scrape_markdown": true,
+        "crawl": true,
+        "structured_json_extract": true
+      },
+      "best_use": ["full_page_evidence", "research_ingestion", "structured_claim_extraction"],
+      "risks": ["credit_consumption", "scrape_noise"]
+    },
+    {
+      "id": "cloudflare_ai_gateway",
+      "provider": "cloudflare",
+      "roles": ["gateway", "logging", "caching", "rate_limit"],
+      "auth_env": "CLOUDFLARE_API_TOKEN",
+      "api_style": "cloudflare_ai_gateway",
+      "capabilities": {
+        "unified_gateway": true,
+        "logging": true,
+        "caching": true,
+        "rate_limiting": true,
+        "guardrails": true
+      },
+      "best_use": ["production_research_mode", "centralized_logging", "latency_tracking"],
+      "risks": ["adds_infrastructure_layer", "requires_account_id_gateway_config"]
+    },
+    {
+      "id": "github",
+      "provider": "github",
+      "roles": ["versioning", "ci", "repo_automation"],
+      "auth_env": "GITHUB_TOKEN_FINE_GRAINED_ONLY",
+      "api_style": "github",
+      "capabilities": {
+        "repo": true,
+        "ci": true,
+        "models": "if_enabled"
+      },
+      "best_use": ["versioning", "ci_reports"],
+      "risks": ["high_security_risk", "do_not_use_general_pat_in_experiments"]
+    }
+  ]
+}

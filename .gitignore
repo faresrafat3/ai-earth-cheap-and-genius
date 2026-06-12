@@ -1,0 +1,19 @@
+# Secrets / local credentials
+.env
+*.env
+/tmp/
+ai_earth_keys.env
+.venv/
+
+# Generated experiment outputs
+ai-earth-rebuild/runs/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
